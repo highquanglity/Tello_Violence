@@ -12,14 +12,16 @@ from module.detector import Detector
 from playsound import playsound
 
 
-alarm = False
-def sound():
-    global alarm
-    playsound("violence_sound_1.wav")
-    alarm = False
+
 
 def main():
     #set up model
+    global alarm 
+    alarm =False
+    def sound():
+        global alarm
+        playsound("violence_sound_1.wav")
+        alarm = False
     
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     thresh = 0.8
