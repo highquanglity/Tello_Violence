@@ -12,6 +12,11 @@ from module.detector import Detector
 from playsound import playsound
 
 
+alarm = False
+def sound():
+    global alarm
+    playsound("violence_sound_1.wav")
+    alarm = False
 
 def main():
     #set up model
@@ -54,7 +59,6 @@ def main():
 
     cv_fps_calc=CvFpsCalc(buffer_len=10)
     battery_status=-1
-    thread_temp = None
     while True:
         fps=cv_fps_calc.get()
         key=cv.waitKey(1) & 0xff
@@ -81,10 +85,9 @@ def main():
             obj_score = box[4]
             category = LABEL_NAMES[int(box[5])]
             if category==LABEL_NAMES[0]:
-                if thread_temp:
-                    thread_temp.join()
-                thread_temp=threading.Thread(target=playsound, args=('./violence_sound_1.wav',))
-                thread_temp.start()
+                if not alarm:
+                    alarm = True
+                    threading.Thread(target=sound).start()
 
 
             x1, y1 = int(box[0] * W), int(box[1] * H)
