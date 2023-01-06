@@ -15,7 +15,7 @@ from playsound import playsound
 
 def main():
     #set up model
-    thread_temp=threading.Thread(target=playsound, args=('./violence_sound_1.wav',))
+    
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     thresh = 0.8
     cfg = LoadYaml("./mydata.yaml")    
@@ -73,12 +73,17 @@ def main():
         LABEL_NAMES = ["violence", "non_violence"]
         H, W, _ = image.shape
         scale_h, scale_w = H / cfg.input_height, W / cfg.input_width
+        
+        thread_temp = None
         for box in output[0]:
             
             box=box.tolist()
             obj_score = box[4]
             category = LABEL_NAMES[int(box[5])]
             if category==LABEL_NAMES[0]:
+                if thread_temp:
+                    thread_temp.join()
+                thread_temp=threading.Thread(target=playsound, args=('./violence_sound_1.wav',))
                 thread_temp.start()
 
 
