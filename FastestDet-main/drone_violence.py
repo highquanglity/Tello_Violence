@@ -9,11 +9,13 @@ import threading
 import torch
 from utils.tool import *
 from module.detector import Detector
+from playsound import playsound
 
 
 
 def main():
     #set up model
+    thread_temp=threading.Thread(target=playsound, args=('./violence_sound_1.wav',))
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     thresh = 0.8
     cfg = LoadYaml("./mydata.yaml")    
@@ -48,6 +50,8 @@ def main():
         except:
             battery_status=-1
 
+    
+
     cv_fps_calc=CvFpsCalc(buffer_len=10)
     battery_status=-1
     while True:
@@ -74,6 +78,9 @@ def main():
             box=box.tolist()
             obj_score = box[4]
             category = LABEL_NAMES[int(box[5])]
+            if category==LABEL_NAMES[0]:
+                thread_temp.start()
+
 
             x1, y1 = int(box[0] * W), int(box[1] * H)
             x2, y2 = int(box[2] * W), int(box[3] * H)
