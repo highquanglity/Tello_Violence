@@ -54,6 +54,7 @@ def main():
 
     cv_fps_calc=CvFpsCalc(buffer_len=10)
     battery_status=-1
+    thread_temp = None
     while True:
         fps=cv_fps_calc.get()
         key=cv.waitKey(1) & 0xff
@@ -74,9 +75,8 @@ def main():
         H, W, _ = image.shape
         scale_h, scale_w = H / cfg.input_height, W / cfg.input_width
         
-        thread_temp = None
+        
         for box in output[0]:
-            
             box=box.tolist()
             obj_score = box[4]
             category = LABEL_NAMES[int(box[5])]
