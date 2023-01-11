@@ -22,6 +22,8 @@ class TelloKeyboardController:
             self.tello.move_up(30)
         elif key == ord('f'):
             self.tello.move_down(30)
+        elif key == ord('u'):
+            self.tello.emergency()
         elif key == 32: #Space
             if not self.in_flight:
                 self.tello.takeoff()
